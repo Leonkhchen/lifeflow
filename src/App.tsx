@@ -33,12 +33,17 @@ export default function App(){
         {id:'l-6',title:'靈感',cards:[{id:'c8',title:'想學吉他',description:'找線上課程',dueDate:'',labels:[],checklist:[],createdAt:now}]}]}
     ]}
   }
+  const useApi = typeof window!=='undefined' && (window.location.hostname==='localhost' || window.location.hostname.endsWith('zeabur.app'))
   useEffect(()=>{
     try{
       const raw=localStorage.getItem(KEY)
       if(raw){ const d=JSON.parse(raw) as Data; setData(d); if(d.boards[0]) setActive(d.boards[0].id); return }
     }catch{}
-    fetch('/api/data').then(r=>r.json()).then((d:Data)=>{
+    if(!useApi){
+      const d=seed(); setData(d); if(d.boards[0]) setActive(d.boards[0].id); try{localStorage.setItem(KEY,JSON.stringify(d))}catch{}
+      return
+    }
+    fetch('/api/data').then(r=>{ if(!r.ok) throw 0; return r.json() }).then((d:Data)=>{
       if(d && (d as Data).boards){ setData(d); if(d.boards[0]) setActive(d.boards[0].id); try{localStorage.setItem(KEY,JSON.stringify(d))}catch{} }
       else throw 0
     }).catch(()=>{
@@ -51,6 +56,7 @@ export default function App(){
     setSaving(true)
     saveRef.current = window.setTimeout(()=>{
       try{localStorage.setItem(KEY,JSON.stringify(data))}catch{}
+      if(!useApi){ setSaving(false); return }
       fetch('/api/data',{method:'PUT',headers:{'content-type':'application/json'},body:JSON.stringify(data)}).catch(()=>{}).finally(()=>setSaving(false))
     },600)
   },[data])
