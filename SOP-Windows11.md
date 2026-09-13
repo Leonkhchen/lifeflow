@@ -1,8 +1,9 @@
-# LifeFlow 新機 SOP（Windows 11 + opencode）
+# DummyLife 新機 SOP（Windows 11 + opencode）
 
-> 目標：在一台全新的 Windows 11 上，從零到可以開發、驗證、部署 LifeFlow。
+> 目標：在一台全新的 Windows 11 上，從零到可以開發、驗證、部署 DummyLife。
 > 架構：Vite + React 純靜態（資料存瀏覽器 localStorage）→ GitHub（`main`）→ Cloudflare Pages 自動部署。
 > 已知正常版本：Node v24.8.0 / npm 11.6.0 / Git 2.53 / gh 2.92 / wrangler 4.131。
+> 註：本檔所有 `Dummy` 均為佔位符，請換成你自己的帳號、信箱與專案名稱。
 
 ## 總覽圖（Mermaid，GitHub 會直接渲染成圖）
 
@@ -26,8 +27,8 @@ flowchart LR
         DEV -->|/api 代理| API
     end
     subgraph CLOUD["雲端"]
-        GH["GitHub<br/>Leonkhchen/lifeflow<br/>分支 main"]
-        CF["Cloudflare Pages<br/>lifeflow-775.pages.dev"]
+        GH["GitHub<br/>Dummy/DummyLife<br/>分支 main"]
+        CF["Cloudflare Pages<br/>DummyLife 的 pages.dev 網址"]
     end
     DEV -->|git push| GH
     GH -->|自動 build<br/>npm run build → dist| CF
@@ -38,13 +39,13 @@ flowchart LR
 
 | 帳號 | 用途 | 一定要手動 |
 |---|---|---|
-| GitHub（`Leonkhchen`） | 放程式碼，Pages 的部署來源 | 是：註冊、開 repo、授權 Cloudflare 存取 repo |
-| Cloudflare（跟 `a0919275722@gmail.com` 同一帳號） | Pages 託管 | 是：註冊、第一次把 Pages 專案連上 GitHub repo |
+| GitHub（`Dummy`） | 放程式碼，Pages 的部署來源 | 是：註冊、開 repo、授權 Cloudflare 存取 repo |
+| Cloudflare（跟 `Dummy` 同一帳號） | Pages 託管 | 是：註冊、第一次把 Pages 專案連上 GitHub repo |
 
 ## 1. 安裝（新電腦依序裝）
 
 1. **Git for Windows**：https://git-scm.com/download/win ，一路下一步（含 Git Bash）。
-2. **Node.js LTS（建議 22 版以上，本機實測 24 可用）**：https://nodejs.org ，裝完重開終端機，驗證：
+2. **Node.js LTS（建議 22 版以上）**：https://nodejs.org ，裝完重開終端機，驗證：
    ```powershell
    node --version; npm --version; git --version
    ```
@@ -58,11 +59,11 @@ flowchart LR
 ```powershell
 # GitHub 登入（會開瀏覽器授權，一定要手動按）
 gh auth login
-gh auth status   # 應看到 Leonkhchen，且有 repo 權限
+gh auth status   # 應看到你的帳號，且有 repo 權限
 
-# Git 身份（跟 GitHub 同名同信箱）
-git config --global user.name "Leon Chen(KHTW)"
-git config --global user.email "a0919275722@gmail.com"
+# Git 身份（換成你自己的名字與信箱）
+git config --global user.name "Dummy"
+git config --global user.email "Dummy"
 
 # Cloudflare 登入（會開瀏覽器 OAuth，一定要手動按允許）
 npx -y wrangler login
@@ -72,8 +73,8 @@ npx -y wrangler whoami   # 應看到帳號 + Account ID，且有 pages (write)
 ## 3. 取專案、裝依賴
 
 ```powershell
-git clone https://github.com/Leonkhchen/lifeflow.git
-cd lifeflow
+git clone https://github.com/Dummy/DummyLife.git
+cd DummyLife
 npm ci        # 沒 package-lock 才用 npm install
 ```
 
@@ -90,7 +91,7 @@ npm start        # Express http://localhost:3000，vite 會把 /api 轉過去
 - 資料優先讀 `localStorage`（key：`lifeflow-data-v1`），沒有才用 `/api`，都沒有就用內建範例。
 - 線上（pages.dev）完全不打 `/api`，只用 localStorage；所以線上 console 不該再出現 `/api/data 405`。
 - `server/` 只為本機開發保留；`data/db.json` 是本機舊資料，不進版控。
-- `zbpack.json` 是 Zeabur 專用，**不要**推上 GitHub（已在untracked，原理是沒被 `git add`）。
+- 舊平台專用的打包設定檔（如 Zeabur 的 zbpack.json）**不要**推上 GitHub（原理是沒被 `git add`，保持 untracked）。
 
 ## 5. 改完後的標準驗證（每次 push 前都跑）
 
@@ -108,18 +109,18 @@ git commit -m "說明"
 git push origin main
 ```
 
-- Cloudflare Pages 專案 `lifeflow` 已接上 GitHub repo，push 到 `main` 約 1～2 分鐘自動重部署。
-- 生產網址：https://lifeflow-775.pages.dev
-- Dashboard 看進度：Pages > `lifeflow` > Deployments。
+- Cloudflare Pages 專案已接上 GitHub repo，push 到 `main` 約 1～2 分鐘自動重部署。
+- 生產網址：你專案的 pages.dev 網址（Dashboard 可查）。
+- Dashboard 看進度：Pages > 你的專案 > Deployments。
 - 查部署狀態（CLI）：
   ```powershell
-  npx -y wrangler pages deployment list --project-name lifeflow
+  npx -y wrangler pages deployment list --project-name DummyLife
   ```
 
 ### 首次才需要：Dashboard 接 Git（一定要手動，一次就好）
 
-Pages > `lifeflow` > Settings > Builds & deployments > Connect Git >
-選 `Leonkhchen/lifeflow`，設定：
+Pages > 你的專案 > Settings > Builds & deployments > Connect Git >
+選你的 repo，設定：
 
 - Production branch：`main`
 - Build command：`npm run build`
@@ -130,8 +131,8 @@ Pages > `lifeflow` > Settings > Builds & deployments > Connect Git >
 
 ```powershell
 npm run build
-npx -y wrangler pages project create lifeflow --production-branch main  # 專案不存在才要
-npx -y wrangler pages deploy dist --project-name lifeflow --commit-dirty=true
+npx -y wrangler pages project create DummyLife --production-branch main  # 專案不存在才要
+npx -y wrangler pages deploy dist --project-name DummyLife --commit-dirty=true
 ```
 
 部署路徑圖：
@@ -148,8 +149,8 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    L["載入：localStorage 有 lifeflow-data-v1？"] -->|有| U["直接用，不打網路"]
-    L -->|無| Q["網址是 localhost 或 zeabur？"]
+    L["載入：localStorage 有資料 key？"] -->|有| U["直接用，不打網路"]
+    L -->|無| Q["網址是 localhost 或舊平台？"]
     Q -->|是| A["打 /api 拿資料"]
     Q -->|否| S["用內建範例資料"]
     A -->|失敗| S
@@ -157,8 +158,8 @@ flowchart TD
 
 ## 7. 上線驗證清單
 
-1. 開 https://lifeflow-775.pages.dev，標題應為「LifeFlow · 個人看板」。
-2. 側邊欄有 2 看板（專案範例、生活規劃），共 7 張卡片；搜尋、今日焦點可點。
+1. 開你的 pages.dev 網址，標題應為看板名稱。
+2. 側邊欄看板、卡片、搜尋、今日焦點都可正常顯示與點擊。
 3. 開 DevTools Console：**不應有** `/api/data 405`（有＝代表靜態判斷被改壞）。
 4. 隨便新增一張卡片 → 重整還在（localStorage 寫入正常）。
 5. `gh repo view --json url,defaultBranchRef` 預設分支應為 `main`。
@@ -168,7 +169,7 @@ flowchart TD
 1. 新電腦的 `gh auth login`、`wrangler login` 瀏覽器授權點擊。
 2. Cloudflare 帳號註冊／登入、第一次 Pages「Connect Git」授權 GitHub。
 3. 自訂網域與 DNS（若以後要掛自己的 domain）。
-4. Zeabur 舊資料搬遷：把 Zeabur 主機 `lifeflow/data/db.json` 內容，貼到新站瀏覽器 `localStorage` 的 `lifeflow-data-v1`（或重建卡片）。
+4. 舊平台資料搬遷：把舊主機 `data/db.json` 內容，貼到新站瀏覽器 `localStorage` 的資料 key（或重建卡片）。
 5. 多人共用同一份資料：現在是每人瀏覽器各存一份，要共用需另做後端（KV/D1），不在本次範圍。
 
 ## 9. 疑難排解
@@ -176,7 +177,7 @@ flowchart TD
 | 症狀 | 原因／解法 |
 |---|---|
 | `npm run build` 失敗 | 先看第一個報錯；多半是改壞 tsx。跑 `npx tsc --noEmit` 定位 |
-| 線上 console 出現 `/api/data 405` | `App.tsx` 的 `useApi` 判斷被改掉；Pages 上只能用 localStorage |
+| 線上 console 出現 `/api/data 405` | `App.tsx` 的靜態站判斷被改掉；Pages 上只能用 localStorage |
 | 開站空白 | 看 `dist/index.html`、`dist/assets` 是否產出；`public/_redirects` 必須存在且內容為 `/* /index.html 200` |
 | `git status` 出現 `vite.config.ts.timestamp-*.mjs` | Vite 暫存檔，已在 `.gitignore`，直接刪檔即可 |
 | `git push` 被拒 | 先 `git fetch origin`＋`git status`，確認沒落後；分支必須是 `main` |
@@ -191,7 +192,7 @@ flowchart TD
 
 | 工具 | 用法 |
 |---|---|
-| GitHub 網頁 | push 後直接開 `SOP-Windows11.md`，流程圖自動成圖 |
+| GitHub 網頁 | push 後直接開本檔，流程圖自動成圖 |
 | VS Code | 開檔按 `Ctrl+Shift+V` 預覽；Mermaid 需加裝「Markdown Preview Mermaid Support」擴充 |
 | mermaid.live | 貼上 ```mermaid 區段即時預覽、除錯語法 |
 | opencode | 直接問「這段 mermaid 有沒有錯」即可幫你檢查 |
