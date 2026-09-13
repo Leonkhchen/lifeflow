@@ -37,8 +37,9 @@ export default function App(){
   useEffect(()=>{
     try{
       const raw=localStorage.getItem(KEY)
-      if(raw){ const d=JSON.parse(raw) as Data; setData(d); if(d.boards[0]) setActive(d.boards[0].id); return }
+      if(raw){ const d=JSON.parse(raw) as Data; if(d && Array.isArray(d.boards)){ setData(d); if(d.boards[0]) setActive(d.boards[0].id); return } }
     }catch{}
+    try{localStorage.removeItem(KEY)}catch{}
     if(!useApi){
       const d=seed(); setData(d); if(d.boards[0]) setActive(d.boards[0].id); try{localStorage.setItem(KEY,JSON.stringify(d))}catch{}
       return

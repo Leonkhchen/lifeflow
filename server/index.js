@@ -60,7 +60,7 @@ function load() {
   try { if (fs.existsSync(DB)) return JSON.parse(fs.readFileSync(DB, 'utf8')) } catch {}
   const d = seed(); fs.writeFileSync(DB, JSON.stringify(d, null, 2)); return d
 }
-app.use(cors())
+app.use(cors({ origin: ['http://localhost:5173', 'http://127.0.0.1:5173'] }))
 app.use(express.json({ limit: '2mb' }))
 app.get('/api/data', (req, res) => res.json(load()))
 app.put('/api/data', (req, res) => {
