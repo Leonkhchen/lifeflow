@@ -4,6 +4,36 @@
 > 架構：Vite + React 純靜態（資料存瀏覽器 localStorage）→ GitHub（`main`）→ Cloudflare Pages 自動部署。
 > 已知正常版本：Node v24.8.0 / npm 11.6.0 / Git 2.53 / gh 2.92 / wrangler 4.131。
 
+## 總覽圖（Mermaid，GitHub 會直接渲染成圖）
+
+```mermaid
+flowchart TD
+    A["0. 準備帳號<br/>GitHub + Cloudflare"] --> B["1. 安裝工具<br/>Git / Node / gh / opencode"]
+    B --> C["2. 登入授權<br/>gh + wrangler"]
+    C --> D["3. 取專案<br/>clone + npm ci"]
+    D --> E["4. 本地開發<br/>npm run dev"]
+    E --> F["5. 驗證<br/>build + tsc"]
+    F --> G["6. 推送<br/>git push main"]
+    G --> H["7. 自動部署<br/>Pages build"]
+    H --> I["8. 上線驗證<br/>開站檢查"]
+```
+
+```mermaid
+flowchart LR
+    subgraph PC["本機 Windows 11"]
+        DEV["npm run dev<br/>localhost:5173"]
+        API["npm start<br/>Express :3000"]
+        DEV -->|/api 代理| API
+    end
+    subgraph CLOUD["雲端"]
+        GH["GitHub<br/>Leonkhchen/lifeflow<br/>分支 main"]
+        CF["Cloudflare Pages<br/>lifeflow-775.pages.dev"]
+    end
+    DEV -->|git push| GH
+    GH -->|自動 build<br/>npm run build → dist| CF
+    USER["使用者瀏覽器<br/>localStorage 存資料"] <--> CF
+```
+
 ## 0. 前置帳號（都要先有）
 
 | 帳號 | 用途 | 一定要手動 |
@@ -104,6 +134,27 @@ npx -y wrangler pages project create lifeflow --production-branch main  # 專案
 npx -y wrangler pages deploy dist --project-name lifeflow --commit-dirty=true
 ```
 
+部署路徑圖：
+
+```mermaid
+flowchart TD
+    P["git push origin main"] --> Q{"Pages Git 連線正常？"}
+    Q -->|是| R["自動 build + 上線<br/>約 1～2 分鐘"]
+    Q -->|否| S["改用緊急手動部署<br/>wrangler pages deploy"]
+    S --> T["上線後回頭修 Git 連線"]
+```
+
+資料讀取邏輯圖（對應 `src/App.tsx`）：
+
+```mermaid
+flowchart TD
+    L["載入：localStorage 有 lifeflow-data-v1？"] -->|有| U["直接用，不打網路"]
+    L -->|無| Q["網址是 localhost 或 zeabur？"]
+    Q -->|是| A["打 /api 拿資料"]
+    Q -->|否| S["用內建範例資料"]
+    A -->|失敗| S
+```
+
 ## 7. 上線驗證清單
 
 1. 開 https://lifeflow-775.pages.dev，標題應為「LifeFlow · 個人看板」。
@@ -133,3 +184,14 @@ npx -y wrangler pages deploy dist --project-name lifeflow --commit-dirty=true
 | `warning: LF will be replaced by CRLF` | Windows 正常現象，忽略 |
 | wrangler 顯示專案不存在 | 先跑 `pages project create`（見 §6 緊急流程） |
 | push 了但線上沒變 | 到 Dashboard 看 Deployments 是否失敗；檢查 Build command／Output（`npm run build`／`dist`） |
+
+## 10. 視覺化預覽工具（看本檔的圖）
+
+本檔的圖用 Mermaid 寫，GitHub 開檔即自動渲染，不用裝任何東西。
+
+| 工具 | 用法 |
+|---|---|
+| GitHub 網頁 | push 後直接開 `SOP-Windows11.md`，流程圖自動成圖 |
+| VS Code | 開檔按 `Ctrl+Shift+V` 預覽；Mermaid 需加裝「Markdown Preview Mermaid Support」擴充 |
+| mermaid.live | 貼上 ```mermaid 區段即時預覽、除錯語法 |
+| opencode | 直接問「這段 mermaid 有沒有錯」即可幫你檢查 |
