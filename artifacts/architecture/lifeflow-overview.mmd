@@ -1,0 +1,9 @@
+flowchart TD
+    Browser["Browser<br/>Vite + React<br/>localStorage lifeflow-data-v1"] --> Vite["Vite Dev Server<br/>:5173"]
+    Browser --> Pages["Cloudflare Pages<br/>lifeflow-775.pages.dev"]
+    Vite -->|"/api proxy"| Express["Express :3000<br/>server/index.js<br/>data/db.json"]
+    Express --> GitHub["GitHub<br/>Leonkhchen/lifeflow<br/>branch main"]
+    Pages --> GitHub
+    GitHub --> Preview["Preview Deploy<br/>PR branch"]
+    Browser --> Storage["localStorage<br/>boards/lists/cards"]
+    Storage --- Board["Board · List · Card<br/>labels · checklist · dueDate"]

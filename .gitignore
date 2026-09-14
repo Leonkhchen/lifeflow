@@ -3,3 +3,7 @@ dist/
 data/db.json
 vite.config.ts.timestamp-*.mjs
 *.timestamp-*.mjs
+.mmd-puppeteer.json
+test-results/
+playwright-report/
+.muse/

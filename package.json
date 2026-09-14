@@ -4,21 +4,41 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:worker": "wrangler dev --local --port 8787 || echo \"wrangler not configured - static mode\"",
     "build": "vite build",
     "start": "node server/index.js",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:e2e": "playwright test",
+    "test:visual": "playwright test --grep visual",
+    "visual:check": "tsx scripts/visual-check.ts",
+    "visual:screenshot": "tsx scripts/capture-screenshots.ts",
+    "verify": "npm run typecheck && npm run test",
+    "storybook": "echo \"Storybook not configured for this small prototype - see docs/TOOLING.md\"",
+    "render:html": "tsx scripts/render-html.ts",
+    "render:mermaid": "tsx scripts/render-mermaid.ts"
   },
   "dependencies": {
+    "@mermaid-js/mermaid-cli": "^11.17.0",
+    "@opencode-ai/plugin": "^1.18.30",
     "cors": "^2.8.5",
+    "echarts": "^6.1.0",
     "express": "^4.21.0",
+    "playwright": "^1.63.0",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "zod": "^4.0.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.53.0",
+    "@types/node": "^22.0.0",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.1",
-    "typescript": "^5.5.4",
-    "vite": "^5.4.2"
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0",
+    "vite": "^5.4.2",
+    "vitest": "^3.0.0"
   }
 }

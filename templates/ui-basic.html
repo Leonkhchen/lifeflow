@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>{{TITLE}}</title>
+<style>
+  :root { --bg:#f8fafc; --card:#ffffff; --ink:#0f172a; --muted:#64748b; --line:#e2e8f0; --accent:#2563eb; --accent-2:#1d4ed8; }
+  * { box-sizing: border-box; }
+  html, body { margin:0; padding:0; background:var(--bg); color:var(--ink); font-family: ui-sans-system, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; line-height:1.5; }
+  .shell { max-width:1200px; margin:0 auto; padding:24px; }
+  header { display:flex; align-items:center; justify-content:space-between; gap:16px; padding:16px 20px; background:var(--card); border:1px solid var(--line); border-radius:16px; box-shadow: 0 1px 2px rgba(15,23,42,.06); }
+  .brand { font-weight:700; font-size:18px; letter-spacing:-.02em; }
+  .subtitle { color:var(--muted); font-size:13px; margin-top:2px; }
+  .cta { background:var(--accent); color:#fff; border:none; border-radius:999px; padding:10px 18px; font-weight:600; cursor:pointer; }
+  .cta:hover { background:var(--accent-2); }
+  .layout { display:grid; grid-template-columns: 220px 1fr 320px; gap:16px; margin-top:16px; }
+  .panel { background:var(--card); border:1px solid var(--line); border-radius:16px; padding:16px; box-shadow: 0 1px 2px rgba(15,23,42,.06); }
+  .panel h2 { font-size:13px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin:0 0 12px; }
+  .chip { display:inline-flex; align-items:center; padding:6px 10px; border-radius:999px; border:1px solid var(--line); background:#f1f5f9; font-size:12px; margin:4px 4px 0 0; }
+  .grid { display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap:12px; }
+  .card { border:1px solid var(--line); border-radius:14px; padding:14px; background:#fff; }
+  .card .price { font-weight:700; color:var(--accent); }
+  .card .name { font-weight:600; margin-bottom:4px; }
+  .card .desc { color:var(--muted); font-size:13px; }
+  .cart-item { display:flex; justify-content:space-between; gap:12px; padding:10px 0; border-bottom:1px solid var(--line); font-size:14px; }
+  .total { display:flex; justify-content:space-between; font-weight:700; font-size:16px; padding-top:12px; }
+  .muted { color:var(--muted); }
+  .hero { background:var(--card); border:1px solid var(--line); border-radius:16px; padding:20px; margin-top:16px; }
+  .hero h1 { margin:0 0 8px; font-size:28px; letter-spacing:-.02em; }
+  .hero p { margin:0; color:var(--muted); }
+  @media (max-width: 1100px) { .layout { grid-template-columns: 200px 1fr; } .panel.cart { grid-column: 1 / -1; } .grid { grid-template-columns: repeat(2, minmax(0,1fr)); } }
+  @media (max-width: 700px) { .layout { grid-template-columns: 1fr; } .grid { grid-template-columns: 1fr; } header { flex-direction:column; align-items:flex-start; } }
+</style>
+</head>
+<body>
+  <div class="shell">
+    <header>
+      <div>
+        <div class="brand">{{TITLE}}</div>
+        <div class="subtitle">{{SUBTITLE}}</div>
+      </div>
+      <button class="cta">Checkout</button>
+    </header>
+
+    <div class="hero">
+      <h1>{{TITLE}}</h1>
+      <p>{{DESCRIPTION}}</p>
+    </div>
+
+    <div class="layout">
+      <aside class="panel">
+        <h2>Categories</h2>
+        <div class="chip">All</div>
+        <div class="chip">Drinks</div>
+        <div class="chip">Mains</div>
+        <div class="chip">Sides</div>
+        <div class="chip">Desserts</div>
+        <div style="margin-top:14px; color:var(--muted); font-size:13px;">Tip: click a category to filter the product grid (static mockup).</div>
+      </aside>
+
+      <section class="panel">
+        <h2>Products</h2>
+        <div class="grid">
+          <div class="card"><div class="name">Cappuccino</div><div class="desc">Fresh espresso & milk foam</div><div class="price" style="margin-top:8px;">$4.50</div></div>
+          <div class="card"><div class="name">Avocado Toast</div><div class="desc">Sourdough, greens, chili</div><div class="price" style="margin-top:8px;">$8.90</div></div>
+          <div class="card"><div class="name">Bowls</div><div class="desc">Grain bowl with veggies</div><div class="price" style="margin-top:8px;">$9.50</div></div>
+          <div class="card"><div class="name">Matcha Latte</div><div class="desc">Ceremonial grade matcha</div><div class="price" style="margin-top:8px;">$5.20</div></div>
+          <div class="card"><div class="name">Croissant</div><div class="desc">Buttery & flaky</div><div class="price" style="margin-top:8px;">$3.80</div></div>
+          <div class="card"><div class="name">Salad</div><div class="desc">Seasonal greens</div><div class="price" style="margin-top:8px;">$7.40</div></div>
+        </div>
+      </section>
+
+      <aside class="panel cart">
+        <h2>Cart</h2>
+        <div class="cart-item"><span>Cappuccino ×1</span><span>$4.50</span></div>
+        <div class="cart-item"><span>Bowls ×1</span><span>$9.50</span></div>
+        <div class="cart-item muted"><span>Subtotal</span><span>$14.00</span></div>
+        <div class="total"><span>Total</span><span>$14.00</span></div>
+        <button class="cta" style="width:100%; margin-top:14px; justify-content:center; display:inline-flex;">Pay $14.00</button>
+      </aside>
+    </div>
+    <footer style="text-align:center; color:var(--muted); font-size:12px; padding:18px 0;">Static mockup · generated by OpenCode Visualize Phase 1 · {{TITLE}}</footer>
+  </div>
+</body>
+</html>
